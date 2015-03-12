@@ -43,7 +43,7 @@ function ah4latest_func( $atts ){
 
         // allow filters
         if ( has_filter('ah4_recent_activity')){
-          $retval .= apply_filters('ah4_recent_activity', $list_item, $orderedpost->ID);
+          $retval .= apply_filters('ah4_recent_activity', $list_item, $orderedpost);
         } else {
            $retval .= $list_item;
         }
