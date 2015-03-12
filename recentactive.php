@@ -13,19 +13,38 @@
 function ah4latest_func( $atts ){
 
   $a = shortcode_atts( array(
-    'title' => 'Latest Activity',
+    'title' => '<h2>Latest Activity</h2>',
     'post_type' => 'post',
     'number' => 10,
+    'before_list' => '',
+    'after_list' => '',
+    'before_item' => '',
+    'after_item' => '<br>',
   ), $atts );
 
 
-  $retval = '';
+  $retval = $a['title'];
 
   $ah4_shortcoder = new ah4_latest_activity;
 
-  $retval .= $ah4_shortcoder->handle_shortcode($a);
+  //$retval .= $ah4_shortcoder->handle_shortcode($a);
+  $post_items = $ah4_shortcoder->handle_shortcode($a);
 
-  return '<h2>' . $a['title'] . '</h2>' . $retval;
+  //$retval = implode("<br>", $post_items);
+
+  if ($post_items) {
+
+      $retval .= $a['before_list'];
+
+      foreach ($post_items as $orderedpost) {
+        $retval .= $a['before_item'] . '<a href="' . get_permalink($orderedpost->ID) . 
+          '" >' . $orderedpost->post_title . '</a>' . $a['after_item'] . "\n";
+      }
+
+      $retval .= $a['after_list'];
+    }
+
+  return $retval;
 
 }
 
@@ -35,12 +54,56 @@ add_shortcode( 'ah4latest', 'ah4latest_func' );
 class ah4_latest_activity
 {
 
-  protected $query_params;
+  // store the query params with defaults
+  protected $query_params = array(
+                              'post_type' => 'post',
+                              'number' => 10,
+                            );
+
+
+  // Allow updating the post type with sanitisation
+  public function set_post_type($post_type){
+
+    if ( post_type_exists($a['post_type'])) {
+      // update to needed type and return true
+      $this->query_params['post_type'] = $post_type;
+      return true;
+    } else {
+      // duff post type setting - do nothing and return false
+      return false;
+    }
+
+  }
+
+  
+  // Allow updating the return number of posts with sanitisation
+  public function set_return_number($number){
+
+    $this->query_params['number'] = $number;
+
+  }
+  
+
+  
 
   // Class properties and methods go here
   public function handle_shortcode($a){
 
-    $this->query_params = $a;
+    // sanitise the query params
+
+    // first check the post types which MUST be post, pages or a registered CPT
+
+     if ( post_type_exists($a['post_type']) ) {
+      $this->query_params['post_type'] = $a['post_type'];
+     }
+
+    // The number must be a number
+
+    $a['number'] = (int) $a['number'];
+
+    $this->query_params['number'] = $a['number'];
+
+    // Get the list
 
     $retval = $this->get_by_comments();
 
@@ -51,6 +114,8 @@ class ah4_latest_activity
     global $wpdb;
 
     $show_limit = $this->query_params['number'];
+
+    $post_type = $this->query_params['post_type'];
 
     $querystr = "
     select wp_posts.*,
@@ -63,7 +128,7 @@ class ah4_latest_activity
         wp_posts.post_date
     ) as mcomment_date
     from $wpdb->posts wp_posts
-    where post_type = 'post'
+    where post_type = '$post_type'
     and post_status = 'publish' 
     order by mcomment_date desc
     limit $show_limit
@@ -71,15 +136,8 @@ class ah4_latest_activity
 
     $pageposts = $wpdb->get_results($querystr, OBJECT);
 
-    $retval = '';
+    return $pageposts;
 
-    if ($pageposts) {
+  } // function get_by_comments()
 
-      foreach ($pageposts as $orderedpost) {
-        $retval .= $orderedpost->post_title . "<br>\n";
-      }
-    }
-
-    return $retval;
-  }
 }
