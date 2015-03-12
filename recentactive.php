@@ -9,7 +9,6 @@
   License: GPL2
  */
 
-//[foobar]
 function ah4latest_func( $atts ){
 
   $a = shortcode_atts( array(
@@ -37,8 +36,19 @@ function ah4latest_func( $atts ){
       $retval .= $a['before_list'];
 
       foreach ($post_items as $orderedpost) {
-        $retval .= $a['before_item'] . '<a href="' . get_permalink($orderedpost->ID) . 
+
+
+        $list_item = $a['before_item'] . '<a href="' . get_permalink($orderedpost->ID) . 
           '" >' . $orderedpost->post_title . '</a>' . $a['after_item'] . "\n";
+
+        // allow filters
+        if ( has_filter('ah4_recent_activity')){
+          $retval .= apply_filters('ah4_recent_activity', $list_item, $orderedpost->ID);
+        } else {
+           $retval .= $list_item;
+        }
+
+
       }
 
       $retval .= $a['after_list'];
