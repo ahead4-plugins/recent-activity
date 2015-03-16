@@ -9,7 +9,7 @@
   License: GPL2
  */
 
-function ah4latest_func( $atts ){
+function recent_activity_func( $atts ){
 
   $a = shortcode_atts( array(
     'title' => '<h2>Latest Activity</h2>',
@@ -42,8 +42,8 @@ function ah4latest_func( $atts ){
           '" >' . $orderedpost->post_title . '</a>' . $a['after_item'] . "\n";
 
         // allow filters
-        if ( has_filter('ah4_recent_activity')){
-          $retval .= apply_filters('ah4_recent_activity', $list_item, $orderedpost);
+        if ( has_filter('recent_activity')){
+          $retval .= apply_filters('recent_activity', $list_item, $orderedpost);
         } else {
            $retval .= $list_item;
         }
@@ -58,7 +58,7 @@ function ah4latest_func( $atts ){
 
 }
 
-add_shortcode( 'ah4latest', 'ah4latest_func' );
+add_shortcode( 'recent_activity', 'recent_activity_func' );
 
 // create a class to handle the shortcodes
 class ah4_latest_activity
@@ -77,19 +77,6 @@ class ah4_latest_activity
     $this->query_params['post_type'] = $post_type;
 
     return true;
-
-    /*
-
-    if ( post_type_exists($a['post_type'])) {
-      // update to needed type and return true
-      $this->query_params['post_type'] = $post_type;
-      return true;
-    } else {
-      // duff post type setting - do nothing and return false
-      return false;
-    }
-
-    */
 
   }
 
@@ -273,15 +260,18 @@ class ah4_recent_activity_widget extends WP_Widget
 
           foreach ( $post_types  as $type ) {
 
-             echo '<option value="' . $type . '"';
+            if ( $type != 'attachment') {
 
-             
-             if ($type == $post_type) {
-               echo ' selected';
-             }
-             
+               echo '<option value="' . $type . '"';
 
-             echo '>' . $type . '</option>';
+               
+               if ($type == $post_type) {
+                 echo ' selected';
+               }
+               
+
+               echo '>' . $type . '</option>';
+            }
           }
 
           ?>
@@ -325,16 +315,22 @@ class ah4_recent_activity_widget extends WP_Widget
 
     foreach ( $post_types  as $post_type ) {
 
-       $retval .= '<option value="' . $post_type . '"';
+      if (! $post_type == 'attachment'){
 
-       
-       if ($current_sel == $post_type) {
-         $retval .= ' selected';
-       }
-       
+         $retval .= '<option value="' . $post_type . '"';
 
-       $retval .= '>' . $post_type . '</option>';
+         
+         if ($current_sel == $post_type) {
+           $retval .= ' selected';
+         }
+         
+
+         $retval .= '>' . $post_type . '</option>';
+      }
     }
+
+    $retval .= '<option>mmm</option>';
+
 
     $retval .= '</select>';
 
