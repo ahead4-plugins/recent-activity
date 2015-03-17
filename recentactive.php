@@ -1,8 +1,8 @@
 <?php
 /*
-  Plugin Name: Most recently active posts.
+  Plugin Name: Most recently active posts
   Plugin URI: http://www.ahead4.biz/plugins/
-  Description: Displays posts or custom post types by latest comment or published if no comments
+  Description: Displays posts or custom post types by latest comment or published if no comments.
   Version: 1.0
   Author: Andrew Fielden
   Author URI: http://andrew.ahead4.biz/
@@ -163,10 +163,10 @@ class ah4_recent_activity_widget extends WP_Widget
       'ah4_recent_activity', 
 
       // Widget name will appear in UI
-      __('Recent Activity Widget', 'ah4_recentactive_domain'), 
+      __('Recent Activity', 'ah4_recentactive_domain'), 
 
       // Widget description
-      array( 'description' => __( 'Recent Activity Widget', 'ah4_recentactive_domain' ), ) 
+      array( 'description' => __( 'Displays posts or custom post types by latest comment or published if no comments.', 'ah4_recentactive_domain' ), ) 
     );
   }
 
@@ -196,21 +196,25 @@ class ah4_recent_activity_widget extends WP_Widget
 
     if ($post_items) {
 
+      echo '<ul class="recent-activity">';
+
       foreach ($post_items as $orderedpost) {
 
-
-        echo  '<a href="' . get_permalink($orderedpost->ID) . 
-          '" >' . $orderedpost->post_title . "</a><br>\n";
-
+        echo  '<li><a href="' 
+        . get_permalink($orderedpost->ID)
+        . '" >' . $orderedpost->post_title 
+        . "</a></li>\n";
 
       }
-      
+
+      echo '</ul>';
+
     }
 
     echo $args['after_widget'];
 
   }
-      
+
   // Widget Backend 
   public function form( $instance ) {
     if ( isset( $instance[ 'title' ] ) ) {
