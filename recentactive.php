@@ -196,21 +196,25 @@ class ah4_recent_activity_widget extends WP_Widget
 
     if ($post_items) {
 
+      echo '<ul class="recent-activity">';
+
       foreach ($post_items as $orderedpost) {
 
-
-        echo  '<a href="' . get_permalink($orderedpost->ID) . 
-          '" >' . $orderedpost->post_title . "</a><br>\n";
-
+        echo  '<li><a href="' 
+        . get_permalink($orderedpost->ID)
+        . '" >' . $orderedpost->post_title 
+        . "</a></li>\n";
 
       }
-      
+
+      echo '</ul>';
+
     }
 
     echo $args['after_widget'];
 
   }
-      
+
   // Widget Backend 
   public function form( $instance ) {
     if ( isset( $instance[ 'title' ] ) ) {
