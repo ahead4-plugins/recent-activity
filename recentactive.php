@@ -1,8 +1,8 @@
 <?php
 /*
-  Plugin Name: Most recently active posts.
+  Plugin Name: Most recently active posts
   Plugin URI: http://www.ahead4.biz/plugins/
-  Description: Displays posts or custom post types by latest comment or published if no comments
+  Description: Displays posts or custom post types by latest comment or published if no comments.
   Version: 1.0
   Author: Andrew Fielden
   Author URI: http://andrew.ahead4.biz/
