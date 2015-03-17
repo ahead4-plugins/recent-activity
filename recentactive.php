@@ -163,10 +163,10 @@ class ah4_recent_activity_widget extends WP_Widget
       'ah4_recent_activity', 
 
       // Widget name will appear in UI
-      __('Recent Activity Widget', 'ah4_recentactive_domain'), 
+      __('Recent Activity', 'ah4_recentactive_domain'), 
 
       // Widget description
-      array( 'description' => __( 'Recent Activity Widget', 'ah4_recentactive_domain' ), ) 
+      array( 'description' => __( 'Displays posts or custom post types by latest comment or published if no comments.', 'ah4_recentactive_domain' ), ) 
     );
   }
 
